@@ -16,20 +16,30 @@ function Promt() {
 
   // Load chat history from localStorage on mount
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      const storedPromt = localStorage.getItem(`promtHistory_${user._id}`);
-      if (storedPromt) {
-        setPromt(JSON.parse(storedPromt));
+    try {
+      const rawUser = localStorage.getItem("user");
+      if (rawUser && rawUser !== "undefined") {
+        const user = JSON.parse(rawUser);
+        const storedPromt = localStorage.getItem(`promtHistory_${user._id}`);
+        if (storedPromt && storedPromt !== "undefined") {
+          setPromt(JSON.parse(storedPromt));
+        }
       }
+    } catch (err) {
+      console.error("Error loading user or promtHistory:", err.message);
     }
   }, []);
 
   // Save chat history to localStorage on promt update
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      localStorage.setItem(`promtHistory_${user._id}`, JSON.stringify(promt));
+    try {
+      const rawUser = localStorage.getItem("user");
+      if (rawUser && rawUser !== "undefined") {
+        const user = JSON.parse(rawUser);
+        localStorage.setItem(`promtHistory_${user._id}`, JSON.stringify(promt));
+      }
+    } catch (err) {
+      console.error("Error saving promtHistory:", err.message);
     }
   }, [promt]);
 
@@ -51,7 +61,7 @@ function Promt() {
       const token = localStorage.getItem("token");
 
       const { data } = await axios.post(
-        "https://deepseek-ai-1.onrender.com/promt", 
+        "https://deepseek-ai-1.onrender.com/promt",
         { content: trimmed },
         {
           headers: {
@@ -103,10 +113,7 @@ function Promt() {
       </div>
 
       {/* Scrollable Chat Box */}
-      <div
-        className="w-full max-w-4xl flex-1 overflow-y-auto mt-6 mb-4 space-y-4
-          h-[60vh] px-1 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
-      >
+      <div className="w-full max-w-4xl flex-1 overflow-y-auto mt-6 mb-4 space-y-4 h-[60vh] px-1 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
         {promt.map((msg, index) => (
           <div
             key={index}
@@ -155,10 +162,7 @@ function Promt() {
 
         {/* Show user's prompt while loading */}
         {loading && typeMessage && (
-          <div
-            className="whitespace-pre-wrap px-4 py-3 rounded-2xl text-sm break-words
-           bg-blue-600 text-white self-end ml-auto max-w-[40%]"
-          >
+          <div className="whitespace-pre-wrap px-4 py-3 rounded-2xl text-sm break-words bg-blue-600 text-white self-end ml-auto max-w-[40%]">
             {typeMessage}
           </div>
         )}
