@@ -25,7 +25,7 @@ function Sidebar({ onClose }) {
       alert(data.message);
 
       setAuthUser(null);
-      navigate("/login");
+      navigate("/Login");
     } catch (error) {
       alert(error?.response?.data?.errors || "Logout Failed");
     }

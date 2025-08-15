@@ -42,7 +42,7 @@ function Signup() {
         }
       );
       alert(data.message || "Signup Succeeded");
-      navigate("/login");
+      navigate("/Login");
     } catch (error) {
       const msg = error?.response?.data?.errors || "Signup Failed";
       setError(msg);
@@ -147,7 +147,7 @@ function Signup() {
           <a className="text-[#7a6ff6] hover:underline" href="">
             Already registered?
           </a>
-          <Link className="text-[#7a6ff6] hover:underline" to={"/login"}>
+          <Link className="text-[#7a6ff6] hover:underline" to={"/Login"}>
             Login
           </Link>
         </div>
