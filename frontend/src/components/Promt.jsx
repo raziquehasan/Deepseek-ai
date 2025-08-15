@@ -51,7 +51,7 @@ function Promt() {
       const token = localStorage.getItem("token");
 
       const { data } = await axios.post(
-        "http://localhost:4002/api/v1/deepseekai/promt",
+        "https://deepseek-ai-1.onrender.com/promt", 
         { content: trimmed },
         {
           headers: {
