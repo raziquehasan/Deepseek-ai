@@ -18,7 +18,7 @@ function Home() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col w-full md:ml-64">
+      <div className="flex-1 flex flex-col w-full">
         {/* Header for mobile */}
         <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-gray-700">
           <div className="text-xl font-bold">deepseek</div>
@@ -28,7 +28,8 @@ function Home() {
         </div>
 
         {/* Message area */}
-        <div className="flex-1 flex items-center justify-center px-2 sm:px-6">
+        <div className="flex-1 flex items-center justify-center px-2 w-full sm:px-6">
+          
           <Promt />
         </div>
       </div>

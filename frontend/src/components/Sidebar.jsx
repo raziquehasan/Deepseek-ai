@@ -36,6 +36,7 @@ function Sidebar({ onClose }) {
 
   return (
     <div className="h-full flex flex-col justify-between p-4">
+      
       {/* Header */}
       <div>
         <div className="flex border-b border-gray-600 p-2 justify-between items-center mb-4">

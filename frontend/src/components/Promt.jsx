@@ -132,7 +132,8 @@ function Promt() {
         }
       `}</style>
 
-      <div className="h-full md:h-screen flex flex-col justify-between p-4 overflow-y-auto">
+      <div className="h-full  md:h-screen flex flex-col justify-between p-4 overflow-y-auto">
+        
         {/* Header */}
         <div className="mt-8 md:mt-16 text-center">
           <div className="flex items-center justify-center gap-2">
