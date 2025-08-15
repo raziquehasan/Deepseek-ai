@@ -7,6 +7,9 @@ const upload = multer({ storage: multer.memoryStorage() }); // in-memory for sim
 
 const router = express.Router();
 
-router.post("/promt", userMiddleware, upload.single("file"), sendPrompt);
+router.post("/", userMiddleware, sendPrompt);
+router.get("/", (req, res) => {
+  res.send("✅ Prompts GET route exists — but use POST to send prompts.");
+});
 
 export default router;

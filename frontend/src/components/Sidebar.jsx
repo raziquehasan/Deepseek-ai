@@ -12,12 +12,15 @@ function Sidebar({ onClose }) {
 
   const handleLogout = async () => {
     try {
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         "http://localhost:4002/api/v1/user/logout",
-        {
-          withCredentials: true,
-        }
-      );
+  {}, // empty body
+  {
+    withCredentials: true,
+  }
+);
+
+    
 
       localStorage.removeItem("user");
       localStorage.removeItem("token");
@@ -25,7 +28,7 @@ function Sidebar({ onClose }) {
       alert(data.message);
 
       setAuthUser(null);
-      navigate("/Login");
+      navigate("/login");
     } catch (error) {
       alert(error?.response?.data?.errors || "Logout Failed");
     }

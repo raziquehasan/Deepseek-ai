@@ -18,14 +18,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // CORS configuration
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL, // Your frontend URL
-    credentials: true, // IMPORTANT: Allow cookies to be sent
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// enable credentials
+
+app.use(cors(
+  {
+      origin: 'http://localhost:5173',
+    credentials: true, 
+  }
+));
 
 // Root route
 app.get("/", (req, res) => {
@@ -34,16 +34,14 @@ app.get("/", (req, res) => {
 
 // Connect to MongoDB
 mongoose
-  .connect(MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URL)
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error("MongoDB Connection Error: ", error));
 
 // Routes
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/deepseekai", promtRoutes);
+app.use("/api/v1/prompts", promtRoutes);
+
 
 // Start server
 app.listen(port, () => {

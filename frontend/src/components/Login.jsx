@@ -12,49 +12,56 @@ function Login() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
   const [, setAuthUser] = useAuth();
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    const name = e.target.name;
+    const { name, value } = e.target;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
-  const handleLogin = async () => {
-    console.log("Login clicked", formData);  // Debug log to verify button click
-    setLoading(true);
-    setError("");
-    try {
-      const { data } = await axios.post(
-        "https://deepseek-ai-b7kl.onrender.com/api/v1/user/login",
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+const handleLogin = async () => {
+  setLoading(true);
+  setError("");
 
-      console.log(data);
-      alert(data.message || "Login Succeeded");
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
-      setAuthUser(data.token);
-      navigate("/");
-    } catch (error) {
-      const msg = error?.response?.data?.errors || "Login Failed";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const { data } = await axios.post(
+      "http://localhost:4002/api/v1/user/login",
+      {
+        email: formData.email,
+        password: formData.password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    localStorage.setItem("user", JSON.stringify(data.user));
+    localStorage.setItem("token", data.token);
+
+    setAuthUser(data.user);
+
+    alert(data.message || "Login Succeeded");
+    navigate("/");
+  } catch (error) {
+    const msg = error?.response?.data?.errors
+      ? Array.isArray(error.response.data.errors)
+        ? error.response.data.errors.join(", ")
+        : error.response.data.errors
+      : error?.response?.data?.message || "Login Failed";
+    setError(msg);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black px-4">
@@ -71,61 +78,65 @@ function Login() {
           Login
         </h1>
 
-        {/* email */}
+        {/* Email */}
         <div className="mb-4 mt-2">
           <input
             className="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#7a6ff0]"
             type="text"
             name="email"
-            placeholder="email"
+            placeholder="Email"
             value={formData.email}
             onChange={handleChange}
           />
         </div>
 
-        {/* password */}
+        {/* Password */}
         <div className="mb-4 mt-2 relative">
           <input
             className="w-full bg-transparent border border-gray-600 rounded-md px-4 py-3 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#7a6ff0]"
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="password"
+            placeholder="Password"
             value={formData.password}
             onChange={handleChange}
           />
-          <span className=" absolute right-3 top-3 text-gray-400">
+          <span
+            className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
             <Eye size={18} />
           </span>
         </div>
 
         {/* Error Message */}
-        {error && <span className="text-red-600 text-sm mb-4">{error}</span>}
+        {error && <span className="text-red-600 text-sm mb-4 block">{error}</span>}
 
-        {/* Terms & Condition */}
+        {/* Terms & Conditions */}
         <p className="text-xs text-gray-400 mt-4 mb-6">
           By signing up or logging in, you consent to DeepSeek's{" "}
           <a className="underline" href="">
             Terms of Use
           </a>{" "}
           and{" "}
-          <a className=" underline" href="">
+          <a className="underline" href="">
             Privacy Policy
-          </a>{" "}
+          </a>
           .
         </p>
 
-        {/* Login button */}
+        {/* Login Button */}
         <button
           onClick={handleLogin}
           disabled={loading}
-          className=" w-full bg-[#7a6ff6] hover:bg-[#6c61a6] text-white font-semibold py-3 rounded-lg transition disabled:opacity-50"
+          className="w-full bg-[#7a6ff6] hover:bg-[#6c61a6] text-white font-semibold py-3 rounded-lg transition disabled:opacity-50"
         >
-          {loading ? "logging in... " : "Login"}
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {/* Links */}
         <div className="flex justify-between mt-4 text-sm">
-          <a className="text-[#7a6ff6] hover:underline" href="">
+          <a className="text-[#7a6ff6] hover:underline cursor-pointer">
             Haven't account?
           </a>
           <Link className="text-[#7a6ff6] hover:underline" to={"/signup"}>
@@ -135,6 +146,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

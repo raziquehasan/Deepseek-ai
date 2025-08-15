@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
       password: hashPassword,
     });
     await newuser.save();
-    return res.status(201).json({ message: "signup succeeded" });
+    return res.status(201).json({ message: "Signup succeeded" });
   } catch (error) {
     console.log("Error in signup: ", error);
     return res.status(500).json({ errors: "Error in signup" });
@@ -38,21 +38,23 @@ export const login = async (req, res) => {
       return res.status(403).json({ errors: "Invalid Credentials" });
     }
     // jwt code
-    const token = jwt.sign({ id: user._id }, config.JWT_USER_PASSWORD, {
-      expiresIn: "1d",
-    });
+   const token = jwt.sign({ id: user._id }, config.JWT_SECRET, {
+  expiresIn: "1d",
+     });
+
 
     const cookieOptions = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
+      path: "/",  // make sure to set path here
     };
 
     res.cookie("jwt", token, cookieOptions);
     return res
       .status(201)
-      .json({ message: "User loggedin succeeded", user, token });
+      .json({ message: "User logged in succeeded", user, token });
   } catch (error) {
     console.log("Error in login: ", error);
     return res.status(500).json({ errors: "Error in login" });
@@ -61,8 +63,15 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    res.clearCookie("jwt");
-    return res.status(200).json({ message: "Loggout succeeded" });
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      path: "/", // This must match cookie options used in login
+    };
+
+    res.clearCookie("jwt", cookieOptions);
+    return res.status(200).json({ message: "Logout succeeded" });
   } catch (error) {
     console.log("Error in logout: ", error);
     return res.status(500).json({ errors: "Error in logout" });

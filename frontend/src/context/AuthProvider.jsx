@@ -1,11 +1,17 @@
-import { createContext, useContext, useState } from "react";
-import Cookies from "js-cookie";
+import { createContext, useContext, useState, useEffect } from "react";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [authUser, setAuthUser] = useState(() => {
-    return localStorage.getItem("token") || Cookies.get("jwt") || null;
-  });
+  const [authUser, setAuthUser] = useState(null);
+
+  useEffect(() => {
+    // On mount, load user from localStorage if present
+    const user = localStorage.getItem("user");
+    if (user) {
+      setAuthUser(JSON.parse(user));
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={[authUser, setAuthUser]}>
