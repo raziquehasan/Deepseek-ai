@@ -30,8 +30,8 @@ function Login() {
     setLoading(true);
     setError("");
     try {
-     const { data } = await axios.post(
-  "https://deepseek-ai-1.onrender.com/login",
+  const { data } = await axios.post(
+  "https://deepseek-ai-1.onrender.com/api/v1/user/login",
   {
     email: formData.email,
     password: formData.password,
@@ -40,6 +40,7 @@ function Login() {
     withCredentials: true,
   }
 );
+
 
       console.log(data);
       alert(data.message || "Login Succeeded");
