@@ -14,6 +14,7 @@ function Promt() {
   const [loading, setLoading] = useState(false);
   const promtEndRef = useRef();
 
+  // Load chat history from localStorage on mount
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -24,6 +25,7 @@ function Promt() {
     }
   }, []);
 
+  // Save chat history to localStorage on promt update
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -31,10 +33,12 @@ function Promt() {
     }
   }, [promt]);
 
+  // Scroll to bottom when promt or loading changes
   useEffect(() => {
     promtEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [promt, loading]);
 
+  // Send message handler
   const handleSend = async () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
@@ -74,17 +78,18 @@ function Promt() {
       ]);
     } finally {
       setLoading(false);
-      setTypeMessage(null);
+      setTypeMessage("");
     }
   };
 
+  // Send message on Enter key
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSend();
   };
 
   return (
     <div className="flex flex-col items-center justify-between flex-1 w-full px-4 pb-4 md:pb-8 h-full">
-      {/* ➤ Greeting Section */}
+      {/* Greeting Section */}
       <div className="mt-8 md:mt-16 text-center">
         <div className="flex items-center justify-center gap-2">
           <img src={logo} alt="DeepSeek Logo" className="h-6 md:h-8" />
@@ -97,7 +102,7 @@ function Promt() {
         </p>
       </div>
 
-      {/* ➤ Scrollable Chat Box with fixed height and scrollbar */}
+      {/* Scrollable Chat Box */}
       <div
         className="w-full max-w-4xl flex-1 overflow-y-auto mt-6 mb-4 space-y-4
           h-[60vh] px-1 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
@@ -110,7 +115,6 @@ function Promt() {
             }`}
           >
             {msg.role === "assistant" ? (
-              // 🧠 Full-width assistant response
               <div className="w-full bg-[#232323] text-white rounded-xl px-4 py-3 text-sm whitespace-pre-wrap">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
@@ -142,7 +146,6 @@ function Promt() {
                 </ReactMarkdown>
               </div>
             ) : (
-              // 👤 User message - 30% width at top-right
               <div className="w-[30%] bg-blue-600 text-white rounded-xl px-4 py-3 text-sm whitespace-pre-wrap self-start">
                 {msg.content}
               </div>
@@ -160,7 +163,7 @@ function Promt() {
           </div>
         )}
 
-        {/* 🤖 Typing Indicator */}
+        {/* Typing Indicator */}
         {loading && (
           <div className="flex justify-start w-full">
             <div className="bg-[#2f2f2f] text-white px-4 py-3 rounded-xl text-sm animate-pulse">
@@ -172,7 +175,7 @@ function Promt() {
         <div ref={promtEndRef} />
       </div>
 
-      {/* ➤ Input Box */}
+      {/* Input Box */}
       <div className="w-full max-w-4xl relative mt-auto">
         <div className="bg-[#2f2f2f] rounded-[2rem] px-4 md:px-6 py-6 md:py-8 shadow-md">
           <input
@@ -185,7 +188,7 @@ function Promt() {
           />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-4">
-            {/* 🛠️ Functional Buttons */}
+            {/* Functional Buttons */}
             <div className="flex gap-2 flex-wrap">
               <button className="flex items-center gap-2 border border-gray-500 text-white text-sm md:text-base px-3 py-1.5 rounded-full hover:bg-gray-600 transition">
                 <Bot className="w-4 h-4" />
@@ -197,7 +200,7 @@ function Promt() {
               </button>
             </div>
 
-            {/* ➤ Send Button */}
+            {/* Send Button */}
             <div className="flex items-center gap-2 ml-auto">
               <button className="text-gray-400 hover:text-white transition">
                 <Paperclip className="w-5 h-5" />
@@ -205,6 +208,7 @@ function Promt() {
               <button
                 onClick={handleSend}
                 className="bg-gray-500 hover:bg-blue-600 p-2 rounded-full text-white transition"
+                aria-label="Send message"
               >
                 <ArrowUp className="w-4 h-4" />
               </button>

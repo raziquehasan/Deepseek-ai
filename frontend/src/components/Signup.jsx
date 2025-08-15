@@ -29,18 +29,19 @@ function Signup() {
     setLoading(true);
     setError("");
     try {
-      const { data } = await axios.post(
-        "http://localhost:4002/api/v1/user/signup",
-        {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+     const { data } = await axios.post(
+  "https://deepseek-ai-1.onrender.com/signup",
+  {
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    email: formData.email,
+    password: formData.password,
+  },
+  {
+    withCredentials: true,
+  }
+);
+
       alert(data.message || "Signup Succeeded");
       navigate("/Login");
     } catch (error) {
