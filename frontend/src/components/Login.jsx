@@ -27,20 +27,20 @@ function Login() {
   };
 
   const handleLogin = async () => {
+    console.log("Login clicked", formData);  // Debug log to verify button click
     setLoading(true);
     setError("");
     try {
-  const { data } = await axios.post(
-  "https://deepseek-ai-1.onrender.com/api/v1/user/login",
-  {
-    email: formData.email,
-    password: formData.password,
-  },
-  {
-    withCredentials: true,
-  }
-);
-
+      const { data } = await axios.post(
+        "https://deepseek-ai-b7kl.onrender.com/api/v1/user/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log(data);
       alert(data.message || "Login Succeeded");
